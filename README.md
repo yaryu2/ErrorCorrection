@@ -13,7 +13,7 @@ becomes the error correction bytes.
 
 ## Implementation Notes
 
-This implementation performs the Reed-Solomon transformations over arrys of ints, as it seems to be the 
+This implementation performs the Reed-Solomon transformations over arrays of ints, as it seems to be the 
 fastest-performing means to do so. This has implications for the maximum size of an encoded message. 
 
 In RS, the size of a symbol (and thus the number of independent symbols) is linked to the size of the 
@@ -30,3 +30,6 @@ compute multiplication, the library uses a look-up table. The size of this table
 number of elements in the field. For a field of 256 elements (an 8-bit field), the size of the largest 
 look-up table is 256 * 256 * 32 bits == 2 MiB. For a 9-bit field of 512 elements, the size of the look-up
 table is 8 MiB.
+
+This library does provide a set of stream-based adapters, allowing users to read and write normal files as 
+standard streams. 
