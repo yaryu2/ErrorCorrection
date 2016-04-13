@@ -6,6 +6,27 @@ to retransmit the data; this technique is also known as Forward Error Correction
 in situations where reacquisition of the data is impossible or impractical, such as stored data on a 
 hard disk or transmitted over a wireless protocol.
 
+Some readers may be familiar with the idea of parity - some value computed from the rest of the data that
+is transmitted along with the data. RS is similar to the idea in parity, but different in what sort of 
+properties it has. For instance, one common application of the idea of parity is in Raid-5 harddrive 
+systems. In the simplest case, you have three drives in total; one drive stores one half of the original 
+data, the second drive stores the other half of the original data, and the third drive stores the XOR
+of the two original drives - A XOR B = C. Since the XOR operation is bijective, you can recover any one 
+part from the two remaining parts. If drive A fails, you can compute `A = B XOR C` to get your data back.
+You can extend this scheme to more than three drives, however, you can only have one set of parity data.
+Say you had five drives - then your parity would be `E = A XOR B XOR C XOR D`. A problem arises 
+however - there's less redundency. You can only lose 1 out of any 5 drives, any more and you've lost everything.
+You might be tempted to say "well, why not mirror the parity drive?". That does buy a little more redundency, but
+it's not as good as it could be. For instance, if you lose the two parity drives, you don't lose any data. 
+But if you lose two original data drives, you've lost everything - with mirror parity drives, you can't lose
+*any* two drives. In the lingo, "Mirrored XOR" is not a *maximally-separated* encoding.
+
+Reed-Solomon provides a way to implement this system - with Reed-Solomon, you can actually tune to your 
+heart's content how much parity to have, whether it be 1/3 of the stored or transmitted data, 1/2, 5/6ths - 
+the choice is yours. This is what makes RS and other FEC schemes so powerful.
+
+...
+
 Reed-Solomon encoding is built on the mathematics of finite fields, also known as Galois fields. 
 Blocks of bytes to transmit are formed as polynomials over a finite field; the error correction bytes
 are formed by dividing the message polynomial by a code generator polynomial ith the remainer polynomial 
