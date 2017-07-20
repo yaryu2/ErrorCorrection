@@ -56,3 +56,10 @@ None of these limits affect the total number of blocks you can transmit; message
 
 This library does provide a set of stream-based adapters, allowing users to read and write normal files as 
 standard streams. 
+
+
+## License ##
+
+This code is licensed under the [BSD 2-clause license][1].
+
+[1]: https://opensource.org/licenses/BSD-2-Clause
