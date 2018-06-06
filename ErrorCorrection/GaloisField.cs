@@ -72,7 +72,7 @@
     ///   - 2^1 =  2
     ///   - 2^2 =  4
     ///   - 2^3 =  8 mod 5 = 3
-    ///   - 2^5 = 16 mod 5 = 1
+    ///   - 2^4 = 16 mod 5 = 1
     ///
     /// Each element was generated, and generated only once, thus the element 2 in GF(5) is primitive in GF(5).
     /// We can now write the elements of GF(5) indexed by a=2:
