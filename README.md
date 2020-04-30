@@ -41,7 +41,7 @@ In RS, the size of a symbol (and thus the number of independent symbols) is link
 encoded block. If there are 16 symbols, then the whole block is limited to 15 places, with each place
 being one of 16 values. Such a system would require that the entire transmitted block be exactly 60 
 bits long. Similarly for a system of 256 symbols, the entire block is limited to 255 places (for a total
-block size of 255*256 = 65280 bits ).
+block size of 255 * 8 = 2040 bits, or just 255 bytes.
 
 Since this library stores symbols in ints, the maximum symbol can only be 32 bits, and thus, the maximum
 block size is 2^32 * (2^32 -1).
