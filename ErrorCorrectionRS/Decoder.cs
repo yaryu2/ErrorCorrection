@@ -1,43 +1,21 @@
-﻿using ErrorCorrection;
-
-namespace ErrorCorrectionRS;
+﻿namespace ErrorCorrectionRS;
 
 public sealed class Decoder
 {
     private readonly int fieldSize;
     private readonly int messageSymbols;
     private readonly int paritySymbols;
-
     private readonly int fieldGenPoly;
-
     private readonly GaloisField gf;
-
     private readonly int[] syndroms;
-
     private readonly int[] lambda;
     private readonly int[] corrPoly;
     private readonly int[] lambdaStar;
-
     private readonly int[] lambdaPrime;
-
     private readonly int[] omega;
-
     private readonly int[] errorIndexes;
-
     private readonly int[] chienCache;
 
-    /// <summary>
-    /// Initializes a new instance of the reed-solomon decoder.
-    /// </summary>
-    /// <param name="fieldSize">The size of the Galois field to create. Must be a value that is 
-    /// a power of two. The length of the output block is set to `fieldSize - 1`.</param>
-    /// <param name="messageSymbols">The number of original message symbols per block.</param>
-    /// <param name="paritySymbols">The number of parity symbols per block.</param>
-    /// <param name="fieldGenPoly">A value representing the field generator polynomial, 
-    /// which must be order N for a field GF(2^N).</param>
-    /// <remarks>
-    /// BlockSize is equal to `fieldSize - 1`. messageSymbols plus paritySymbols must equal BlockSize.
-    /// </remarks>
     public Decoder(int fieldSize, int messageSymbols, int paritySymbols, int fieldGenPoly)
     {
         if (fieldSize - 1 != messageSymbols + paritySymbols)
@@ -52,56 +30,36 @@ public sealed class Decoder
         this.fieldSize = fieldSize;
         this.messageSymbols = messageSymbols;
         this.paritySymbols = paritySymbols;
-        this.BlockSize = fieldSize - 1;
+        BlockSize = fieldSize - 1;
 
         this.fieldGenPoly = fieldGenPoly;
 
-        this.gf = new GaloisField(fieldSize, fieldGenPoly);
+        gf = new GaloisField(fieldSize, fieldGenPoly);
 
-        // Syndrom calculation buffers
-        this.syndroms = new int[paritySymbols];
+        syndroms = new int[paritySymbols];
 
-        // Lamda calculation buffers
-        this.lambda = new int[paritySymbols - 1];
-        this.corrPoly = new int[paritySymbols - 1];
-        this.lambdaStar = new int[paritySymbols - 1];
+        lambda = new int[paritySymbols - 1];
+        corrPoly = new int[paritySymbols - 1];
+        lambdaStar = new int[paritySymbols - 1];
 
-        // LambdaPrime calculation buffers
-        this.lambdaPrime = new int[paritySymbols - 2];
+        lambdaPrime = new int[paritySymbols - 2];
 
-        // Omega calculation buffers
-        this.omega = new int[paritySymbols - 2];
+        omega = new int[paritySymbols - 2];
 
-        // Error position calculation
-        this.errorIndexes = new int[fieldSize - 1];
+        errorIndexes = new int[fieldSize - 1];
 
-        // Cache of the lookup used in the ChienSearch process.
-        this.chienCache = new int[fieldSize - 1];
+        chienCache = new int[fieldSize - 1];
 
-        for (int i = 0; i < this.chienCache.Length; i++)
+        for (int i = 0; i < chienCache.Length; i++)
         {
-            this.chienCache[i] = gf.Inverses[gf.Field[i + 1]];
+            chienCache[i] = gf.Inverses[gf.Field[i + 1]];
         }
     }
 
-    /// <summary>
-    /// The number of symbols that make up an entire encoded message. An encoded message is composed of the
-    /// original data symbols plus parity symbols.
-    /// </summary>
     public int BlockSize { get; private set; }
 
-    /// <summary>
-    /// The number of symbols per block that store original message symbols.
-    /// </summary>
-    public int MessageSize
-    {
-        get { return this.messageSymbols; }
-    }
+    public int MessageSize => messageSymbols;
 
-    /// <summary>
-    /// Discovers and corrects any errors in the block provided.
-    /// </summary>
-    /// <param name="message">A block containing a reed-solomon encoded message.</param>
     public void Decode(int[] message)
     {
         if (message.Length != this.BlockSize)
